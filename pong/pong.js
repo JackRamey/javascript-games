@@ -6,6 +6,10 @@ var animate = window.requestAnimationFrame ||
 var canvas = document.getElementById("game");
 var width = document.body.clientWidth;
 var height = document.body.clientHeight;
+var p1ScoreElm = document.getElementById("p1score");
+var p2ScoreElm = document.getElementById("p2score");
+var p1Score = 0;
+var p2Score = 0;
 canvas.width = width;
 canvas.height = height;
 var context = canvas.getContext('2d');
@@ -29,8 +33,16 @@ window.addEventListener("keyup", function(event) {
 });
 
 window.onload = function() {
+    initField();
     animate(step);
 };
+
+window.onresize = function() {
+    width = document.body.clientWidth;
+    height = document.body.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+}
 
 var step = function() {
     update();
@@ -48,10 +60,39 @@ var update = function() {
 var render = function() {
     context.fillStyle = "#000";
     context.fillRect(0, 0, width, height);
+    drawCenterLine();
     player.render();
     computer.render();
     ball.render();
 };
+
+var initField = function() {
+    initScoreboard();
+    drawCenterLine();
+}
+
+var initScoreboard = function() {
+    var p1Score = document.getElementById("p1score");
+    var p2Score = document.getElementById("p2score");
+    p1Score.style.left = width/2 + 20;
+    p2Score.style.right = width/2 + 20;
+}
+
+var drawCenterLine = function() {
+    context.beginPath();
+    context.moveTo(width/2, 0);
+    context.lineTo(width/2, height);
+
+    context.strokeStyle = '#999'
+    context.lineWidth = 10;
+    context.setLineDash([25]);
+    context.stroke();
+}
+
+var updateScores = function() {
+    p1ScoreElm.innerHTML = p1Score;
+    p2ScoreElm.innerHTML = p2Score;
+}
 
 function Paddle(x, y, width, height) {
     this.x = x;
@@ -166,12 +207,18 @@ Ball.prototype.update = function(paddle1, paddle2) {
         this.x_speed = -base_speed;
         this.x = width / 2;
         this.y = height / 2;;
+        p1Score += 1;
+        console.log("GOAL: Player 2 scores. Score P1: " + p1Score + " P2: " + p2Score);
+        updateScores();
     }
     if (this.x > width) { // a point was scored on right player
         this.y_speed = 0;
         this.x_speed = base_speed;
         this.x = width / 2;
         this.y = height / 2;;
+        p2Score += 1;
+        console.log("GOAL: Player 1 scores. Score P1: " + p1Score + " P2: " + p2Score);
+        updateScores();
     }
 
    if (top_x < (paddle1.x + paddle1.width) && bottom_x > paddle1.x && top_y < (paddle1.y + paddle1.height) && bottom_y > paddle1.y) {
@@ -187,3 +234,4 @@ Ball.prototype.update = function(paddle1, paddle2) {
        this.x += this.x_speed;
    }
 };
+

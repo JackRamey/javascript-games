@@ -1,3 +1,32 @@
+@import url(http://fonts.googleapis.com/css?family=Press+Start+2P);
+
 body {
     margin: 0;
+    background-color: #000;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+li {
+    position: absolute;
+    margin: 0 0;
+    padding: 0;
+    min-width: 50px;
+    display: inline;
+    font-family: 'Press Start 2P';
+    font-size: 300%;
+    color: #DDDDDD;
+}
+
+#scoreboard {
+    position: absolute;
+    z-index: 5;
+}
+
+.score {
+    z-index: 10;
 }
