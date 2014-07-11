@@ -22,6 +22,7 @@ var player = new Player();
 var computer = new Computer();
 var ball = new Ball(width / 2, height / 2);
 
+var touchQuadrant = 0;
 var keysDown = {};
 
 window.addEventListener("keydown", function(event) {
@@ -31,6 +32,40 @@ window.addEventListener("keydown", function(event) {
 window.addEventListener("keyup", function(event) {
     delete keysDown[event.keyCode];
 });
+
+    document.addEventListener("touchstart", function(event) {
+        event.preventDefault();
+        var touchobj = event.changedTouches[0];
+        x = parseInt(touchobj.clientX);
+        y = parseInt(touchobj.clientY);
+        if (x < width/2 && y < height/2) { // top left quadrant
+            touchQuadrant = 0;
+            keysDown[38] = true;
+        } else if (x > width/2 && y < height/2) { //top right quadrant
+            touchQuadrant = 1;
+            keysDown[38] = true;
+        } else if (x > width/2 && y > height/2) { //bot right quadrant
+            touchQuadrant = 2;
+            keysDown[40] = true;
+        } else if (x < width/2 && y > height/2) { //bot left quadrant
+            touchQuadrant = 3;
+            keysDown[40] = true;
+        }
+    }, false);
+
+    document.addEventListener("touchend", function(event) {
+        event.preventDefault();
+        if (touchQuadrant == 0) {
+            delete keysDown[38];
+        } else if (touchQuadrant == 1) {
+            delete keysDown[38];
+        } else if (touchQuadrant == 2) {
+            delete keysDown[40];
+        } else if (touchQuadrant == 3) {
+            delete keysDown[40];
+        }
+    }, false);
+
 
 window.onload = function() {
     initField();
